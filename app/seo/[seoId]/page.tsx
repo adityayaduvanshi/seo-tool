@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { ApiResponse, Task } from '@/types';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import ResultHeader from '@/components/result-header';
 import ResultProgress from '@/components/result-progress';
@@ -11,6 +11,7 @@ import { HashLoader } from 'react-spinners';
 import SeoData from '@/components/seo-data';
 import SeoChecks from '@/components/seo-checks';
 import SpeedInsights from '@/components/speed-insights';
+import { Button } from '@/components/ui/button';
 
 interface SeoPageProps {
   params: {
@@ -22,6 +23,8 @@ const page = ({ params }: SeoPageProps) => {
   if (!params.seoId) {
     return redirect('/');
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const router = useRouter();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data, isLoading, error } = useGetData<ApiResponse | null>(
     decodedSeoId
@@ -36,7 +39,14 @@ const page = ({ params }: SeoPageProps) => {
     );
   }
   if (tasks[0]?.status_code !== 20000) {
-    return <div>Invalid Request</div>;
+    return (
+      <div className="h-[100vh] w-[100vw] flex justify-center items-center">
+        Something went wrong!
+        <Button variant="link" onClick={() => router.back()}>
+          Try Again
+        </Button>
+      </div>
+    );
   }
 
   const {

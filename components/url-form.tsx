@@ -32,9 +32,14 @@ export const UrlForm = () => {
       url: '',
     },
   });
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const encodedValue = encodeURIComponent(values.url);
-    router.push(`/seo/${encodedValue}`);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const encodedValue = encodeURIComponent(values.url);
+      router.push(`/seo/${encodedValue}`);
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Form {...form}>
@@ -48,7 +53,11 @@ export const UrlForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="https://twitter.com" {...field} />
+                <Input
+                  className="bg-slate-100 "
+                  placeholder="https://twitter.com"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
